@@ -1,0 +1,167 @@
+﻿<!DOCTYPE html>
+<html> <head>
+      <style>
+        table {
+          text-align:center;
+          margin-left: auto;
+          margin-right: auto;
+          font-family: 'Lucida Sans', 'Lucida Sans Regular',
+                       'Lucida Grande', 'Lucida Sans Unicode',
+                        Geneva, Verdana, sans-serif;
+        }
+        input, button {
+          padding: 12px 20px;           margin: 8px 0;
+          display: inline-block;        border: 1px solid #ccc;
+          border-radius: 4px;           box-sizing: border-box;
+          font-family: 'Lucida Sans', 'Lucida Sans Regular',
+                       'Lucida Grande', 'Lucida Sans Unicode',
+                        Geneva, Verdana, sans-serif;
+          align: center;
+         }
+      </style>
+   </head>
+   <body>
+      <div align="center">
+      <h1>Grade Calculator</h1>  
+       
+      <button onclick="addActivity()" id="addActivity">
+        Add Activity</button>
+
+      <label for="activity">Activity</label>
+      <input type="text" id="activity" size="3">
+       
+      <label for="Weight">Weight</label>
+      <input type="text" id="Weight" size="3"><br>    
+
+      <button onclick="addGrade()" id="addGrade">
+        Add Grade</button>
+
+      <label for="grade">Grade</label>
+      <input type="text" id="grade" size="3"">
+
+      <label for="activityNo">Activity no</label>
+      <input type="text" id="activityNo" size="3"><br>        
+   
+      <button onclick="deleteActivity()" id="deleteActivity">
+      Delete Activity </button>    
+
+      <table border="2" id="theTable" style="width:70%">
+          <tr>
+              <th>No</th>
+              <th>Activity</th> <th>Weight</th>
+              <th>Grade</th> </tr>  
+          <tr>
+              <td>1</td> <td>Lab1</td>
+              <td>10</td> <td></td>
+          </tr>
+          <tr>
+              <td>2</td> <td>Lab2</td>
+              <td>20</td> <td></td>
+          </tr>
+          <tr>
+              <td>3</td> <td>Test1</td>
+              <td>30</td> <td></td>
+          </tr>
+          <tr>
+              <td>4</td> <td>Test2</td>
+              <td>40</td> <td></td>
+          </tr>
+      </table>
+
+    <!-- Error message output -->
+    <p id="ERR" style="color:red;">Error Message:</p>
+  </div>
+
+  <script>
+    // Global variables
+    let noActivity = 4; // Tracks how many activities exist
+    const table = document.getElementById("theTable");
+    const errorMsg = document.getElementById("ERR");
+
+    // Clears the error message area
+    function clearError() {
+      errorMsg.innerText = "Error Message:";
+    }
+
+    // Displays a specific error message
+    function showError(msg) {
+      errorMsg.innerText = "Error Message: " + msg;
+    }
+
+    // Function to add an activity to the table
+    function addActivity() {
+      clearError(); // Reset error
+
+      const activity = document.getElementById("activity").value.trim();
+      const weight = parseInt(document.getElementById("Weight").value);
+
+      // Validation checks
+      if (activity === "") {
+        showError("Activity name is rejected");
+        return;
+      }
+      if (isNaN(weight) || weight < 1 || weight > 100) {
+        showError("Weight is rejected");
+        return;
+      }
+
+      // Add new row to table
+      noActivity++;
+      const newRow = table.insertRow(-1);
+      newRow.insertCell(0).textContent = noActivity;
+      newRow.insertCell(1).textContent = activity;
+      newRow.insertCell(2).textContent = weight;
+      newRow.insertCell(3).textContent = "";
+
+      // Clear input fields after addition
+      document.getElementById("activity").value = "";
+      document.getElementById("Weight").value = "";
+    }
+
+    // Function to assign a grade to a specific activity
+    function addGrade() {
+      clearError(); // Reset error
+
+      const grade = parseInt(document.getElementById("grade").value);
+      const activityNo = parseInt(document.getElementById("activityNo").value);
+
+      // Validate grade
+      if (isNaN(grade) || grade < 0 || grade > 100) {
+        showError("Grade is rejected");
+        return;
+      }
+
+      // Validate activity number
+      if (isNaN(activityNo) || activityNo < 1 || activityNo > noActivity) {
+        showError("Activity No is rejected");
+        return;
+      }
+
+      // Update the grade in the table
+      const row = table.rows[activityNo];
+      if (row) {
+        row.cells[3].textContent = grade; // Replace existing grade
+      }
+
+      // Clear input fields after addition
+      document.getElementById("grade").value = "";
+      document.getElementById("activityNo").value = "";
+    }
+
+    // Function to delete the last activity in the table
+    function deleteActivity() {
+      clearError(); // Reset error
+
+      const rowCount = table.rows.length;
+      if (rowCount <= 1) {
+        showError("No more activities to remove");
+        return;
+      }
+
+      // Remove last row
+      table.deleteRow(-1);
+      noActivity--; // Decrease activity count
+    }
+  </script>
+</body>
+</html>
